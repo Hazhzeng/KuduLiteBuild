@@ -3,14 +3,14 @@
 #!/usr/bin/env bash
 
 cat >/etc/motd <<EOL
-    __ __          __      __    _ __     
-   / //_/_  _ ____/ /_  __/ /   (_) /____ 
+    __ __          __      __    _ __
+   / //_/_  _ ____/ /_  __/ /   (_) /____
   / ,< / / / / __  / / / / /   / / __/ _ \
- 
- / /| / /_/ / /_/ / /_/ / /___/ / /_/  __/
-/_/ |_\__,_/\__,_/\__,_/_____/_/\__/\___/ 
 
-                                          
+ / /| / /_/ / /_/ / /_/ / /___/ / /_/  __/
+/_/ |_\__,_/\__,_/\__,_/_____/_/\__/\___/
+
+
 DEBUG CONSOLE | AZURE APP SERVICE ON LINUX
 
 Documentation: http://aka.ms/webapp-linux
@@ -25,7 +25,7 @@ if [ $# -ne 5 ]; then
 fi
 
 if [ -z "${PORT}" ]; then
-        export PORT=8181
+    export PORT=80
 fi
 
 GROUP_ID=$1
@@ -56,4 +56,4 @@ service ssh restart
 cd /opt/Kudu
 
 echo $(date) running .net core
-ASPNETCORE_URLS=http://0.0.0.0:"$PORT" runuser -p -u "$USER_NAME" -- dotnet Kudu.Services.Web.dll
+ASPNETCORE_URLS=http://0.0.0.0:80 dotnet Kudu.Services.Web.dll
