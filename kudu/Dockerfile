@@ -77,6 +77,7 @@ ENV PATH=$PATH:/opt/nodejs/9/bin
 
 EXPOSE 8181
 
+ENV ASPNETCORE_ENVIRONMENT=Development
 ENTRYPOINT [ "/startup.sh" ]
 CMD [ "1002", "kudu_group", "1001", "kudu_user", "localsite" ]
 
