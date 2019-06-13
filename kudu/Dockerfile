@@ -22,6 +22,9 @@ RUN apt-get install -y ssh \
 # SQL Server gem support
 RUN apt-get install -y unixodbc-dev freetds-dev freetds-bin
 
+# Squash FS support for KuduLite build
+RUN apt-get install -y squashfs-tools
+
 COPY webssh.zip ssh /tmp/
 
 # Install Kudu
