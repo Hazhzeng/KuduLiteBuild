@@ -3,7 +3,7 @@ set -x -e
 
 organization="rogerxman"
 buildnumber=${4-$(date -u +"%y%m%d%H%M")}
-imagename="$organization/kudulite:stage$buildnumber"
+imagename="$organization/kudulite:dev$buildnumber"
 
 docker build --no-cache -t "$imagename" kudu
 docker tag "$imagename" "$imagename"

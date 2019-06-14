@@ -60,7 +60,7 @@ RUN cd /opt/dotnet && unlink lts && ln -s 2.2 /opt/dotnet/lts
 
 #Instal Kudu
 RUN cd /tmp \
-    && git clone -b hazeng-stage --depth 1 https://github.com/Hazhzeng/KuduLite.git \
+    && git clone -b hazeng-dev --depth 1 https://github.com/Hazhzeng/KuduLite.git \
     && cd ./KuduLite \
     && cd ./Kudu.Services.Web \
     && dotnet publish -c Release -o /opt/Kudu \
