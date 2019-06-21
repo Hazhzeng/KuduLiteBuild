@@ -8,6 +8,8 @@ RUN apt-get update \
   && apt-get install -y vim tree --no-install-recommends \
   && apt-get install -y curl zip --no-install-recommends \
   && apt-get install -y tcptraceroute \
+# Squash FS support for KuduLite build
+  && apt-get install -y squashfs-tools \
   && wget -O /usr/bin/tcpping http://www.vdberg.org/~richard/tcpping \
   && chmod 755 /usr/bin/tcpping
 
@@ -22,8 +24,6 @@ RUN apt-get install -y ssh \
 # SQL Server gem support
 RUN apt-get install -y unixodbc-dev freetds-dev freetds-bin
 
-# Squash FS support for KuduLite build
-RUN apt-get install -y squashfs-tools
 
 COPY webssh.zip ssh /tmp/
 
