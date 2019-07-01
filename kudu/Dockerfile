@@ -1,4 +1,4 @@
-FROM oryxprod/build:20190420.8 as main
+FROM oryxprod/build:20190521.9 as main
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -6,9 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
   && apt-get install -y openssh-client --no-install-recommends \
   && apt-get install -y vim tree --no-install-recommends \
-  && apt-get install -y curl zip --no-install-recommends \
   && apt-get install -y tcptraceroute \
-# Squash FS support for KuduLite build
   && apt-get install -y squashfs-tools \
   && wget -O /usr/bin/tcpping http://www.vdberg.org/~richard/tcpping \
   && chmod 755 /usr/bin/tcpping
@@ -24,14 +22,13 @@ RUN apt-get install -y ssh \
 # SQL Server gem support
 RUN apt-get install -y unixodbc-dev freetds-dev freetds-bin
 
-
 COPY webssh.zip ssh /tmp/
 
 # Install Kudu
 RUN mkdir -p /opt/Kudu/local \
   && chmod 755 /opt/Kudu/local \
   && apt-get update \
-  && apt-get install -y unzip \
+  && apt-get  install -y unzip \
 # Install pm2 and pm2-logrotate
   && mkdir -p /home/LogFiles \
 # Install webssh
@@ -60,12 +57,14 @@ RUN cd /opt/dotnet && unlink lts && ln -s 2.2 /opt/dotnet/lts
 
 #Instal Kudu
 RUN cd /tmp \
-    && git clone -b hazeng-stage --depth 1 https://github.com/Hazhzeng/KuduLite.git \
+    && git clone --depth 1 --branch hazeng-stage https://github.com/Hazhzeng/KuduLite.git \
     && cd ./KuduLite \
     && cd ./Kudu.Services.Web \
     && dotnet publish -c Release -o /opt/Kudu \
     && chmod 777 /opt/Kudu/Kudu.Services.Web.dll \
-    && rm -rf /tmp/*
+    && rm -rf /tmp/* \
+    && chmod a+rw /var/nuget \
+    && find /var/nuget -type d -exec chmod 777 {} \;
 
 COPY startup.sh /
 
@@ -78,8 +77,8 @@ RUN ln -s /opt/nodejs/9/lib/node_modules/npm/bin/npm-cli.js /usr/bin/npm-cli.js
 ENV PATH=$PATH:/opt/nodejs/9/bin
 
 EXPOSE 8181
+EXPOSE 80
+ENV PORT 80
 
-ENV ASPNETCORE_ENVIRONMENT=Development
 ENTRYPOINT [ "/startup.sh" ]
-CMD [ "1002", "kudu_group", "1001", "kudu_user", "localsite" ]
-
+CMD [ "1002", "kudu_group", "1001", "root", "localsite" ]

@@ -25,7 +25,7 @@ if [ $# -ne 5 ]; then
 fi
 
 if [ -z "${PORT}" ]; then
-    export PORT=80
+        export PORT=8181
 fi
 
 GROUP_ID=$1
@@ -56,4 +56,4 @@ service ssh restart
 cd /opt/Kudu
 
 echo $(date) running .net core
-ASPNETCORE_URLS=http://0.0.0.0:80 dotnet Kudu.Services.Web.dll
+ASPNETCORE_URLS=http://0.0.0.0:"$PORT" runuser -p -u "$USER_NAME" -- dotnet Kudu.Services.Web.dll
