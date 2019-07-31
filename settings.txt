@@ -4,6 +4,10 @@ ENABLE_ORYX_BUILD:true
 APPSETTING_SCM_DO_BUILD_DURING_DEPLOYMENT:true
 FUNCTIONS_WORKER_RUNTIME:python
 FUNCTIONS_EXTENSION_VERSION:~2
-WEBSITE_SITE_NAME:azclidemo
-WEBSITE_HOSTNAME:azclidemo.azurewebsites.com
+WEBSITE_SITE_NAME:serversidebuild
+WEBSITE_HOSTNAME:serversidebuild.azurewebsites.com
+WEBSITE_MOUNT_ENABLED:0
 AzureWebJobsStorage:DefaultEndpointsProtocol=https;AccountName=cloudbuildlinux;AccountKey=PLnE9Eye+I9MmTF5oBXSZ3NPNUO9pPPakO4PJwgenMMpDgHCC7HIz4SWuoHzd4iifEpxdO9x/0KD4xtED9rGVA==;EndpointSuffix=core.windows.net
+SCM_RUN_FROM_PACKAGE:https://cloudbuildlinux.blob.core.windows.net/scm-releases/scm-latest-hazeng-fa-hk.zip?st=2019-07-18T21%3A57%3A59Z&se=2019-09-19T21%3A57%3A00Z&sp=rl&sv=2018-03-28&sr=b&sig=4w27urpkZgSHeCfvj%2ByhQt4CspMzbNDVN%2F8XWqVLPjc%3D
+APPSETTING_SCM_RUN_FROM_PACKAGE:https://cloudbuildlinux.blob.core.windows.net/scm-releases/scm-latest-hazeng-fa-hk.zip?st=2019-07-18T21%3A57%3A59Z&se=2019-09-19T21%3A57%3A00Z&sp=rl&sv=2018-03-28&sr=b&sig=4w27urpkZgSHeCfvj%2ByhQt4CspMzbNDVN%2F8XWqVLPjc%3D
+WEBSITE_AUTH_ENCRYPTION_KEY:E782F47415EEC076F8087729FB30CF1CA1482610C2FA985E4F22531225722205
