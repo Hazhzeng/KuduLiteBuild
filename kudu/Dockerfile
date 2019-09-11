@@ -1,4 +1,4 @@
-FROM oryxprod/build:20190521.9 as main
+FROM mcr.microsoft.com/oryx/build:20190730.1 as main
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -7,9 +7,12 @@ RUN apt-get update \
   && apt-get install -y openssh-client --no-install-recommends \
   && apt-get install -y vim tree --no-install-recommends \
   && apt-get install -y tcptraceroute \
+# Install Squashfs tools for KuduLite build
   && apt-get install -y squashfs-tools \
   && wget -O /usr/bin/tcpping http://www.vdberg.org/~richard/tcpping \
-  && chmod 755 /usr/bin/tcpping
+  && chmod 755 /usr/bin/tcpping \
+  && apt-get install -y clamav \
+  && freshclam
 
 # Enable SSH for Kudu Console
 RUN apt-get install -y ssh \
@@ -42,6 +45,9 @@ RUN mkdir -p /opt/Kudu/local \
   && chmod -R 777 /home \
   && rm -rf /tmp/*
 
+# Default WebSSH App Port
+ENV KUDU_WEBSSH_PORT="3000"
+
 ENV DOTNET_RUNNING_IN_CONTAINER=true
 
 # Enable correct mode for dotnet watch (only mode supported in a container)
@@ -53,14 +59,13 @@ ENV NUGET_XMLDOC_MODE=skip
 RUN dotnet tool install -g dotnet-aspnet-codegenerator
 ENV PATH=$PATH:/root/.dotnet/tools
 
-RUN cd /opt/dotnet && unlink lts && ln -s 2.2 /opt/dotnet/lts
-
 #Instal Kudu
 RUN cd /tmp \
-    && git clone --depth 1 --branch hazeng-stage https://github.com/Hazhzeng/KuduLite.git \
+    && git clone https://github.com/Azure-App-Service/KuduLite.git \
     && cd ./KuduLite \
+    && git checkout master \
     && cd ./Kudu.Services.Web \
-    && dotnet publish -c Release -o /opt/Kudu \
+    && benv dotnet=2.2 dotnet publish -c Release -o /opt/Kudu \
     && chmod 777 /opt/Kudu/Kudu.Services.Web.dll \
     && rm -rf /tmp/* \
     && chmod a+rw /var/nuget \
@@ -77,8 +82,11 @@ RUN ln -s /opt/nodejs/9/lib/node_modules/npm/bin/npm-cli.js /usr/bin/npm-cli.js
 ENV PATH=$PATH:/opt/nodejs/9/bin
 
 EXPOSE 8181
-EXPOSE 80
-ENV PORT 80
+
+# Copy custom scripts
+RUN mkdir /custom_scripts
+COPY custom_scripts/* /custom_scripts/
+RUN chmod 755 /custom_scripts/*
 
 ENTRYPOINT [ "/startup.sh" ]
-CMD [ "1002", "kudu_group", "1001", "root", "localsite" ]
+CMD [ "1002", "kudu_group", "1001", "kudu_user", "localsite" ]
